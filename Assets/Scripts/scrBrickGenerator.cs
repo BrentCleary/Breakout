@@ -41,7 +41,6 @@ public class scrBlockGenerator : MonoBehaviour
 	}
 
 
-
 	public void CreateBoard()  //? Called in GameManager                      // Instantiates Variables, Calls Methods Below
 	{
 		InstantiateBricks();
@@ -55,8 +54,7 @@ public class scrBlockGenerator : MonoBehaviour
 	// *---------------------------------------- CreateBoard Methods ----------------------------------------
 	public void InstantiateBricks()                                                  // Instantiates Nodes, Assigns names and values, Adds them to brickList
 	{
-		for (int i = 0; i < arrBrickCount; i++)
-		{
+		for (int i = 0; i < arrBrickCount; i++) {
 			GameObject brick = Instantiate(brickPrefab, brickArrTransform);
 			brick.name = $"cntBrick ({i})";
 			brickList.Add(brick);
@@ -90,6 +88,7 @@ public class scrBlockGenerator : MonoBehaviour
 				scrBrick brickScr = scrBrickList[counter];
 				brickScr.arrPos[0] = i;
 				brickScr.arrPos[1] = j;
+
 
 				// Add Array Position to Node Name
 				//brickArr[i, j].name = $"{brickArr[i, j].name} [{i},{j}]";

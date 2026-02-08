@@ -27,5 +27,16 @@ public class scrPaddle : MonoBehaviour
 	}
 
 
+	private void OnCollisionEnter(Collision collision)
+	{
+		scrBall ball = collision.collider.GetComponent<scrBall>();
+		if (ball != null)
+		{
+			Debug.Log("Paddle Hit");
+			ball.Rebound(collision);
+
+		}
+	}
+
 
 }

@@ -2,7 +2,7 @@
 - Project name: Breakout
 - Unity version: Unity 6000.3.3f1
 - Active game object:
-  - Name: objPaddle
-  - Tag: Player
+  - Name: cntBlockGenerator
+  - Tag: Untagged
   - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

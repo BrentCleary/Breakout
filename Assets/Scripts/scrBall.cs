@@ -5,9 +5,10 @@ using UnityEngine.InputSystem;
 public class scrBall : MonoBehaviour
 {
 	[Header("Speed")]
-	public float baseSpeed = 400f;
+	public float baseSpeed = 300f;
+	public float topSpeed  = 1000f;
 	public float currentSpeed;
-	public float speedMultiplier = 1f; 
+	public float speedMultiplier = 2f; 
 
 	public Rigidbody rb;
 
@@ -31,27 +32,32 @@ public class scrBall : MonoBehaviour
 	}
 
 
-	void OnCollisionEnter(Collision collision)
-	{
-		scrBrick  brick  = collision.collider.GetComponent<scrBrick>();
-		scrPaddle paddle	= collision.collider.GetComponent<scrPaddle>();
+	//void OnCollisionEnter(Collision collision)
+	//{
+	//	scrBrick brick = collision.collider.GetComponent<scrBrick>();
+	//	scrPaddle paddle = collision.collider.GetComponent<scrPaddle>();
 
-		if (brick == null && paddle == null) return;
+	//	if (brick == null && paddle == null) return;
 
 
-		if (brick != null)
-		{
-			brick.DetectHit();
-			brick.Break();
-		}
+	//	//if (brick != null)
+	//	//{
+	//	//	brick.DetectHit();
+	//	//	brick.Break();
+	//	//}
 
-		if (paddle != null){
-			paddle.DetectHit();
-		}
+	//	//if (paddle != null){
+	//	//	paddle.DetectHit();
+	//	//}
 
-		Rebound(collision);
+	//	Rebound(collision);
+	//}
 
-	}
+
+
+
+
+
 
 
 	public void Rebound(Collision collision){
@@ -62,12 +68,15 @@ public class scrBall : MonoBehaviour
 		Vector3 collisionDirection = rb.linearVelocity;
 		Debug.Log(collisionDirection);
 
+		int reverseFactor = -1;
 
-		Vector3 normal = collision.contacts[0].normal;
+		Vector3 normal = collision.contacts[0].normal * reverseFactor;
 		normal.y = 0f;
 		
+
+
 		if (normal.sqrMagnitude < 0.0001f) {
-			normal = (transform.position - collision.transform.position); // fallback
+			normal = (transform.position - collision.transform.position) * reverseFactor; // fallback
 		}
 		normal.y = 0f;
 		normal   = normal.normalized;
@@ -75,6 +84,8 @@ public class scrBall : MonoBehaviour
 		// Keep current speed magnitude, then apply 25% increase
 		float currentSpeed = rb.linearVelocity.magnitude;
 		float newSpeed		 = currentSpeed * speedMultiplier;
+		if(newSpeed > topSpeed) 
+			newSpeed = topSpeed;
 
 		// Repel in opposite direction (away from the brick)
 		rb.linearVelocity = normal * newSpeed;
