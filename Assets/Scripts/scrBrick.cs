@@ -4,7 +4,9 @@ public class scrBrick : MonoBehaviour
 {
 
 	private bool broken;
-	public int   brickID;
+	public int brickID;
+	public int[] arrPos;
+
 
 	public void Break()
 	{

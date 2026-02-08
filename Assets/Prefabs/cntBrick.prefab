@@ -444,7 +444,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 126
   m_CollisionDetection: 0
 --- !u!114 &2970513218227023714
 MonoBehaviour:
@@ -458,3 +458,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70e51c0a92368244f8b0df595382c9df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::scr_brick
+  brickID: 0
+  arrPos: 

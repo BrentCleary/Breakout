@@ -707,6 +707,25 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 770265329}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &797423109 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3807428697491997275, guid: e4e6db2b729b0604c9d7dac4e8da316f, type: 3}
+  m_PrefabInstance: {fileID: 6943571092683238096}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &797423111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 797423109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70e51c0a92368244f8b0df595382c9df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::scrBrick
+  brickID: 0
+  arrPos: 
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -1007,8 +1026,8 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b358f7525c31f464b8fa3c4d3ed7c1d2, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::scr_player
-  moveSpeed: 10
+  m_EditorClassIdentifier: Assembly-CSharp::scrPaddle
+  moveSpeed: 500
 --- !u!54 &1509164868
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1034,7 +1053,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 14
+  m_Constraints: 126
   m_CollisionDetection: 0
 --- !u!1 &1523262709
 GameObject:
@@ -1079,8 +1098,15 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f5e61d5d9dc1da343806ee080f679b00, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::scr_block_generator
-  blockPrefab: {fileID: 0}
+  m_EditorClassIdentifier: Assembly-CSharp::scrBlockGenerator
+  brickPrefab: {fileID: 1676312513725994071, guid: e4e6db2b729b0604c9d7dac4e8da316f, type: 3}
+  brickList: []
+  scrBrickList: []
+  brickArrTransform: {fileID: 0}
+  arrColLen: 7
+  arrRowLen: 7
+  startBrickValMap: 
+  crntBrickValMap: 
 --- !u!1 &1563141961
 GameObject:
   m_ObjectHideFlags: 0
@@ -1296,10 +1322,10 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a17f45ca4cc63bf43ab0c6e6c984db41, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::scr_ball
-  baseSpeed: 100
+  m_EditorClassIdentifier: Assembly-CSharp::scrBall
+  baseSpeed: 400
   currentSpeed: 0
-  speedMultiplier: 5
+  speedMultiplier: 2
   rb: {fileID: 0}
 --- !u!54 &1910185821
 Rigidbody:
@@ -1374,7 +1400,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 999240675833935832, guid: e4e6db2b729b0604c9d7dac4e8da316f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 10.5
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 999240675833935832, guid: e4e6db2b729b0604c9d7dac4e8da316f, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1408,6 +1434,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1641115766497357094, guid: e4e6db2b729b0604c9d7dac4e8da316f, type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1676312513725994071, guid: e4e6db2b729b0604c9d7dac4e8da316f, type: 3}
       propertyPath: m_Name
       value: cntBrick
@@ -1432,7 +1462,10 @@ PrefabInstance:
     - {fileID: 2970513218227023714, guid: e4e6db2b729b0604c9d7dac4e8da316f, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3807428697491997275, guid: e4e6db2b729b0604c9d7dac4e8da316f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 797423111}
   m_SourcePrefab: {fileID: 100100000, guid: e4e6db2b729b0604c9d7dac4e8da316f, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

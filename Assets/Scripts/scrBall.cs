@@ -5,15 +5,15 @@ using UnityEngine.InputSystem;
 public class scrBall : MonoBehaviour
 {
 	[Header("Speed")]
-	public float baseSpeed = 100f;
+	public float baseSpeed = 400f;
 	public float currentSpeed;
-	public float speedMultiplier = 2f; 
+	public float speedMultiplier = 1f; 
 
 	public Rigidbody rb;
 
 	void Awake()
 	{
-		rb = GetComponent<Rigidbody>();
+		rb = gameObject.GetComponent<Rigidbody>();
 
 		// Prevent random physics side effects for a breakout ball:
 		rb.useGravity							= false;
