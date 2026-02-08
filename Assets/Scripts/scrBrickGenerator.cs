@@ -19,13 +19,13 @@ public class scrBlockGenerator : MonoBehaviour
 
 	[SerializeField] public List<GameObject> brickList;
 	[SerializeField] public List<scrBrick> scrBrickList;
-	[SerializeField] public GameObject[,] brickArr;
 	public Transform brickArrTransform;
 
 	[Header("Brick Array Settings")] // ! Array Size Controls
-	public int	 arrColLen = 7;                                              // Array Dimensions - Column
-	public int	 arrRowLen = 7;                                                 // Array Dimensions - Row
-	private int	 arrBrickCount => arrColLen * arrRowLen;                         // arrColLen * arrRowLen
+	public int	  arrColLen = 7;                                              // Array Dimensions - Column
+	public int	  arrRowLen = 7;                                                 // Array Dimensions - Row
+	[SerializeField] public GameObject[,] brickArr;
+	private int	  arrBrickCount => arrColLen * arrRowLen;                         // arrColLen * arrRowLen
 	private float spawnX = 100f;                                             // Space Between Nodes
 	private float spawnY = 10.5f;
 	private float spawnZ = 20f;
@@ -34,6 +34,7 @@ public class scrBlockGenerator : MonoBehaviour
 	public List<int> crntBrickValMap;
 
 
+	// * ---------------------------------------- EVENTS ----------------------------------------
 
 	private void Start()
 	{
@@ -43,10 +44,13 @@ public class scrBlockGenerator : MonoBehaviour
 
 	public void CreateBoard()  //? Called in GameManager                      // Instantiates Variables, Calls Methods Below
 	{
+		brickArrTransform = gameObject.transform;                                              // Set parent transform for bricks to this object
+		brickArr = new GameObject[arrColLen, arrRowLen];
+
 		InstantiateBricks();
 		SetBrickTransformPosition();
-
 		BuildBrickArray();
+
 		//AdjNodeMapper();
 	}
 
@@ -60,7 +64,7 @@ public class scrBlockGenerator : MonoBehaviour
 			brickList.Add(brick);
 			
 			scrBrick brickScr = brick.GetComponentInChildren<scrBrick>();
-			brickScr.brickID = i;//! Sets brickID in scrBrick
+			brickScr.brickID = i;																												//! Sets brickID in scrBrick
 			scrBrickList.Add(brickScr);
 			Debug.Log("Instantiated " + brick.name);
 		}
@@ -82,18 +86,31 @@ public class scrBlockGenerator : MonoBehaviour
 		int counter = 0;                                                            // Increments Node reference in brickList 
 		for (int i = 0; i < arrColLen; i++) {                                          // Assigns positions to each gNode in brickArr
 			for (int j = 0; j < arrRowLen; j++) {
+				Debug.Log($"BBA brick {i},{j} = " + brickList[counter].name);
 				brickArr[i, j] = brickList[counter];                                         // Set curent brickList object to current array position
+				Debug.Log(brickArr[i, j].name + " added to brickArr at position [" + i + "," + j + "]");
 
-				// Maps Board Array position for reference
+				Debug.Log("scrBrickList count: " + scrBrickList.Count + " | brickList count: " + brickList.Count);
+				// Maps Brick Array position for reference
 				scrBrick brickScr = scrBrickList[counter];
+
+				if (brickScr == null)
+				{
+					Debug.LogError(
+							$"[BUILD] Null scrBrick at index {counter} (array pos [{i},{j}])! " +
+							$"Was added as brickID {counter}. GameObject gone?",
+							gameObject
+					);
+					counter++;
+					continue;
+				}
+
+				Debug.Log(brickScr.brickID);
 				brickScr.arrPos[0] = i;
 				brickScr.arrPos[1] = j;
 
-
 				// Add Array Position to Node Name
-				//brickArr[i, j].name = $"{brickArr[i, j].name} [{i},{j}]";
 				brickList[counter].name = $"{brickList[counter].name} [{i},{j}]";
-
 
 				counter++;
 			}

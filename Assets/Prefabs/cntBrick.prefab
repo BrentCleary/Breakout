@@ -459,4 +459,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::scr_brick
   brickID: 0
-  arrPos: 
+  cntBrickGenerator: {fileID: 0}
+  arrPos: 0000000000000000
+  durability: 2
