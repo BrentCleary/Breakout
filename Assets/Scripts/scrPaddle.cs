@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 public class scrPaddle : MonoBehaviour
 {
-	public float moveSpeed = 600f;
+	public float moveSpeed = 800f;
 
 	public void DetectHit(){
 		Debug.Log("Paddle Hit");

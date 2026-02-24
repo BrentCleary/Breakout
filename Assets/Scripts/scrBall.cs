@@ -1,16 +1,49 @@
-using System;
+using NUnit.Framework;
+using System.Collections.Generic;
+using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class scrBall : MonoBehaviour
 {
+	
+	// ----- ----- ----- ----- ----- ----- CONFIG PARAMS ----- ----- ----- ----- ----- -----
+	public int ID;
+	private static int _nextID = 1; // Auto-incrementing ID for each ball instance
+
+
+	// ----- ----- ----- ----- ----- ----- SPEED PARAMS ----- ----- ----- ----- ----- -----
 	[Header("Speed")]
-	public float baseSpeed = 300f;
-	public float topSpeed  = 1000f;
 	public float currentSpeed;
-	public float speedMultiplier = 2f; 
+	public int speedLevel = 0; // 0-4, corresponds to speedList index
+	
+	private float speed_0 = 0f;
+	private float speed_1 = 300f;
+	private float speed_2 = 400f;
+	private float speed_3 = 500f;
+	private float speed_4 = 600f;
+	List<float> speedList = new List<float>();
+
+	public int   paddleHitCount = 0;
+
+	public Vector3 direction;
+
+	// ----- ----- ----- ----- ----- ----- COMPONENTS ----- ----- ----- ----- ----- -----
 
 	public Rigidbody rb;
+
+
+
+	// ----- ----- ----- ----- ----- ----- CONSTRUCTOR ----- ----- ----- ----- ----- -----
+	public scrBall()
+	{
+		ID = _nextID;
+		_nextID++;
+
+		speedList = new List<float>() { speed_0, speed_1, speed_2, speed_3, speed_4 };
+	
+	}
+
 
 	void Awake()
 	{
@@ -21,78 +54,111 @@ public class scrBall : MonoBehaviour
 		rb.freezeRotation					= true;
 		rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
 	}
-	private void Start()
+
+
+	void Start()
 	{
-		currentSpeed = baseSpeed;
-		Launch(Vector3.forward);  // or your preferred start direction
+
+		Launch();
 	}
 
-	public void Launch(Vector3 direction)	{
-		rb.linearVelocity = direction.normalized * currentSpeed;
+	void Update()
+	{
+		transform.position += direction * currentSpeed * Time.deltaTime;
 	}
 
 
-	//void OnCollisionEnter(Collision collision)
-	//{
-	//	scrBrick brick = collision.collider.GetComponent<scrBrick>();
-	//	scrPaddle paddle = collision.collider.GetComponent<scrPaddle>();
-
-	//	if (brick == null && paddle == null) return;
-
-
-	//	//if (brick != null)
-	//	//{
-	//	//	brick.DetectHit();
-	//	//	brick.Break();
-	//	//}
-
-	//	//if (paddle != null){
-	//	//	paddle.DetectHit();
-	//	//}
-
-	//	Rebound(collision);
-	//}
+	void Launch()
+	{
+		direction = new Vector3(1f, 0f, 1f).normalized;
+		currentSpeed = speedList[1];
+	}
 
 
 
+	void OnCollisionEnter(Collision collision)
+	{
+		Rebound(collision);
+	}
 
 
-
-
-
-	public void Rebound(Collision collision){
-
-		// Compute bounce direction away from contact normal (XZ only)
-		// normal points from brick -> ball at the contact.
-
-		Vector3 collisionDirection = rb.linearVelocity;
-		Debug.Log(collisionDirection);
-
-		int reverseFactor = -1;
-
-		Vector3 normal = collision.contacts[0].normal * reverseFactor;
-		normal.y = 0f;
-		
-
-
-		if (normal.sqrMagnitude < 0.0001f) {
-			normal = (transform.position - collision.transform.position) * reverseFactor; // fallback
+	void UpdateSpeed(int speedLevel){
+		if(speedLevel >= speedList.Count-1)
+		{
+			currentSpeed = speedList[speedList.Count-1];
 		}
-		normal.y = 0f;
-		normal   = normal.normalized;
-
-		// Keep current speed magnitude, then apply 25% increase
-		float currentSpeed = rb.linearVelocity.magnitude;
-		float newSpeed		 = currentSpeed * speedMultiplier;
-		if(newSpeed > topSpeed) 
-			newSpeed = topSpeed;
-
-		// Repel in opposite direction (away from the brick)
-		rb.linearVelocity = normal * newSpeed;
-		currentSpeed		  = newSpeed; // store if you want it tracked
+		else{
+			currentSpeed = speedList[speedLevel];
+		}
 	}
 
+
+	public void Rebound(Collision collision)
+	{
+		ContactPoint contact = collision.contacts[0];
+		Vector3 normal = contact.normal;
+		Vector3 contactPoint = contact.point;
+
+		// Nudge to prevent sticking (XZ plane only)
+		transform.position += new Vector3(normal.x * 0.1f, 0f, normal.z * 0.1f);
+
+		GameObject hitter = collision.collider.gameObject;
+
+		if (hitter.CompareTag("Paddle"))
+		{
+			paddleHitCount++;
+			UpdateSpeed(paddleHitCount); // Increase speed level each paddle hit, up to max defined in speedList. 
+
+			// Position-based rebound using stable angle method
+			Vector3 paddleCenter = collision.collider.bounds.center;
+			float		halfWidth = collision.collider.bounds.size.x * 0.5f;
+
+			// Normalized hit position across paddle (-1 to 1)
+			float normalizedOffset = Mathf.Clamp(
+					(contactPoint.x - paddleCenter.x) / halfWidth,
+					-1f,
+					1f
+			);
+
+			// Maximum bounce angle from vertical (degrees)
+			float maxBounceAngle = 70f;
+
+			// Convert to radians
+			float angle = normalizedOffset * maxBounceAngle * Mathf.Deg2Rad;
+
+			// Construct normalized direction (XZ plane)
+			float newX = Mathf.Sin(angle);
+			float newZ = Mathf.Cos(angle);
+
+			direction = new Vector3(newX, 0f, newZ).normalized;
+
+
+
+		}
+		else if (hitter.CompareTag("Brick"))
+		{ 
+			collision.collider.GetComponent<scrBrick>().durability -= 1;
+			Debug.Log("Brick Hit");
+
+			direction = Vector3.Reflect(direction, normal).normalized; // Mirror reflection for bricks/walls (normal-based)
+
+		}
+		else if (hitter.CompareTag("Wall"))
+		{
+			Debug.Log("Wall Hit");
+			
+			direction = Vector3.Reflect(direction, normal).normalized; // Mirror reflection for bricks/walls (normal-based)
+		}
+
+		if (currentSpeed < 300f)
+		{
+			Launch();
+		}
+
+	}
 }
+
+
 
 
 
