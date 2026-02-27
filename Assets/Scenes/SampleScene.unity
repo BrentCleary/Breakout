@@ -3340,7 +3340,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b358f7525c31f464b8fa3c4d3ed7c1d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::scrPaddle
-  moveSpeed: 800
+  moveSpeed: 1000
 --- !u!1 &1523262709
 GameObject:
   m_ObjectHideFlags: 0
@@ -3998,9 +3998,9 @@ GameObject:
   - component: {fileID: 1910185815}
   - component: {fileID: 1910185818}
   - component: {fileID: 1910185817}
-  - component: {fileID: 1910185816}
   - component: {fileID: 1910185820}
   - component: {fileID: 1910185821}
+  - component: {fileID: 1910185822}
   m_Layer: 0
   m_Name: objBall
   m_TagString: Ball
@@ -4023,27 +4023,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2017695469}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &1910185816
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1910185814}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1910185817
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -4146,6 +4125,27 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!135 &1910185822
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1910185814}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &1918221863
 PrefabInstance:
   m_ObjectHideFlags: 0
