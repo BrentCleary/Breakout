@@ -18,10 +18,10 @@ public class scrBall : MonoBehaviour
 	public int speedLevel = 0; // 0-4, corresponds to speedList index
 	
 	private float speed_0 = 0f;
-	private float speed_1 = 300f;
-	private float speed_2 = 400f;
-	private float speed_3 = 500f;
-	private float speed_4 = 600f;
+	private float speed_1 = 400f;
+	private float speed_2 = 800f;
+	private float speed_3 = 1200f;
+	private float speed_4 = 1600f;
 	List<float> speedList = new List<float>();
 
 	public int   paddleHitCount = 0;
@@ -62,9 +62,9 @@ public class scrBall : MonoBehaviour
 		Launch();
 	}
 
-	void Update()
+	void FixedUpdate()
 	{
-		transform.position += direction * currentSpeed * Time.deltaTime;
+		rb.linearVelocity = direction * currentSpeed;
 	}
 
 
@@ -109,16 +109,11 @@ public class scrBall : MonoBehaviour
 			paddleHitCount++;
 			UpdateSpeed(paddleHitCount); // Increase speed level each paddle hit, up to max defined in speedList. 
 
-			// Position-based rebound using stable angle method
-			Vector3 paddleCenter = collision.collider.bounds.center;
+
+			Vector3 paddleCenter = collision.collider.bounds.center;      // Position-based rebound using stable angle method
 			float		halfWidth = collision.collider.bounds.size.x * 0.5f;
 
-			// Normalized hit position across paddle (-1 to 1)
-			float normalizedOffset = Mathf.Clamp(
-					(contactPoint.x - paddleCenter.x) / halfWidth,
-					-1f,
-					1f
-			);
+			float normalizedOffset = Mathf.Clamp(	(contactPoint.x - paddleCenter.x) / halfWidth, -1f,	1f);	// Normalized hit position across paddle (-1 to 1)
 
 			// Maximum bounce angle from vertical (degrees)
 			float maxBounceAngle = 70f;
