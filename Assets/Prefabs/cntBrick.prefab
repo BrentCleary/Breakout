@@ -429,8 +429,8 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 70e51c0a92368244f8b0df595382c9df, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::scr_brick
+  m_EditorClassIdentifier: Assembly-CSharp::scrBrick
   brickID: 0
   cntBrickGenerator: {fileID: 0}
   arrPos: 0000000000000000
-  durability: 2
+  durability: 3

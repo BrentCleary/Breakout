@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.InputSystem;
 public class scrBrick : MonoBehaviour
@@ -11,8 +12,8 @@ public class scrBrick : MonoBehaviour
 
 	public int durability = 3; // how many hits it takes to break this brick
 
-	Transform		 objBrick;
-	MeshRenderer meshRend;
+	Transform			 objBrick;
+	MeshRenderer[] meshRendList;
 
 
 	public void Awake()
@@ -22,6 +23,8 @@ public class scrBrick : MonoBehaviour
 			arrPos = new int[2];
 			Debug.Log($"Fixed arrPos size on {gameObject.name} (was invalid)", this);
 		}
+
+		meshRendList = GetComponentsInChildren<MeshRenderer>();
 	}
 
 	private void Update()
@@ -56,15 +59,18 @@ public class scrBrick : MonoBehaviour
 	public void ChangeColor()
 	{
 		// Example: Change color based on durability
-		if (meshRend != null)
+		if (meshRendList != null)
 		{
-			if (durability == 2)
+			foreach (MeshRenderer meshRend in meshRendList)
 			{
-				meshRend.material.color = Color.red;
-			}
-			else if (durability == 1)
-			{
-				meshRend.material.color = Color.yellow;
+				if (durability == 2)
+				{
+					meshRend.material.color = Color.yellow;
+				}
+				else if (durability == 1)
+				{
+					meshRend.material.color = Color.red;
+				}
 			}
 		}
 	}

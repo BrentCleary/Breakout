@@ -79,6 +79,7 @@ public class scrBall : MonoBehaviour
 	void OnCollisionEnter(Collision collision)
 	{
 		Rebound(collision);
+
 	}
 
 
@@ -139,6 +140,7 @@ public class scrBall : MonoBehaviour
 		else if (hitter.CompareTag("Brick"))
 		{ 
 			collision.collider.GetComponent<scrBrick>().durability -= 1;
+			collision.collider.GetComponent<scrBrick>().ChangeColor();
 			Debug.Log("Brick Hit");
 
 			direction = Vector3.Reflect(direction, normal).normalized; // Mirror reflection for bricks/walls (normal-based)
