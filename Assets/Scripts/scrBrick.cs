@@ -9,7 +9,7 @@ public class scrBrick : MonoBehaviour
 	public GameObject cntBrickGenerator;
 	public int[] arrPos = new int[2];
 
-	public int durability = 2; // how many hits it takes to break this brick
+	public int durability = 3; // how many hits it takes to break this brick
 
 	Transform		 objBrick;
 	MeshRenderer meshRend;
@@ -51,6 +51,22 @@ public class scrBrick : MonoBehaviour
 		broken = true;
 		Destroy(gameObject);
 		
+	}
+
+	public void ChangeColor()
+	{
+		// Example: Change color based on durability
+		if (meshRend != null)
+		{
+			if (durability == 2)
+			{
+				meshRend.material.color = Color.red;
+			}
+			else if (durability == 1)
+			{
+				meshRend.material.color = Color.yellow;
+			}
+		}
 	}
 
 

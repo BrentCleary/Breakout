@@ -18,10 +18,10 @@ public class scrBall : MonoBehaviour
 	public int speedLevel = 0; // 0-4, corresponds to speedList index
 	
 	private float speed_0 = 0f;
-	private float speed_1 = 400f;
-	private float speed_2 = 800f;
-	private float speed_3 = 1200f;
-	private float speed_4 = 1600f;
+	private float speed_1 = 800f;
+	private float speed_2 = 1200f;
+	private float speed_3 = 1600f;
+	private float speed_4 = 2000f;
 	List<float> speedList = new List<float>();
 
 	public int   paddleHitCount = 0;
@@ -82,14 +82,22 @@ public class scrBall : MonoBehaviour
 	}
 
 
-	void UpdateSpeed(int speedLevel){
-		if(speedLevel >= speedList.Count-1)
+	void UpdateSpeed(int level){
+
+		if(level >= speedList.Count-1)
 		{
-			currentSpeed = speedList[speedList.Count-1];
+			level = speedList.Count-1;
 		}
-		else{
-			currentSpeed = speedList[speedLevel];
-		}
+		
+		currentSpeed = speedList[level];
+		speedLevel = level;
+	}
+
+
+	// Nudge to prevent sticking (XZ plane only)
+	public void Nudge(Vector3 normal)
+	{
+		transform.position += new Vector3(normal.x * 0.1f, 0f, normal.z * 0.1f);
 	}
 
 
@@ -99,8 +107,7 @@ public class scrBall : MonoBehaviour
 		Vector3 normal = contact.normal;
 		Vector3 contactPoint = contact.point;
 
-		// Nudge to prevent sticking (XZ plane only)
-		transform.position += new Vector3(normal.x * 0.1f, 0f, normal.z * 0.1f);
+		// Nudge(normal);
 
 		GameObject hitter = collision.collider.gameObject;
 
@@ -109,9 +116,8 @@ public class scrBall : MonoBehaviour
 			paddleHitCount++;
 			UpdateSpeed(paddleHitCount); // Increase speed level each paddle hit, up to max defined in speedList. 
 
-
 			Vector3 paddleCenter = collision.collider.bounds.center;      // Position-based rebound using stable angle method
-			float		halfWidth = collision.collider.bounds.size.x * 0.5f;
+			float		halfWidth		 = collision.collider.bounds.size.x * 0.5f;
 
 			float normalizedOffset = Mathf.Clamp(	(contactPoint.x - paddleCenter.x) / halfWidth, -1f,	1f);	// Normalized hit position across paddle (-1 to 1)
 
