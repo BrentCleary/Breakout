@@ -4561,6 +4561,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: cntBall
       objectReference: {fileID: 0}
+    - target: {fileID: 7820509971152165633, guid: 1f14c6942540b304f806cc24d557bc4c, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -33,7 +33,6 @@ public class scrPaddle : MonoBehaviour
 		if (ball != null)
 		{
 			Debug.Log("Paddle Hit");
-			ball.Rebound(collision);
 
 		}
 	}
