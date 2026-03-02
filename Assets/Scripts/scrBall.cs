@@ -98,7 +98,8 @@ public class scrBall : MonoBehaviour
 			if (Physics.SphereCast(transform.position, radius, direction, out hit, remainingDistance))
 			{
 				// Move to impact point
-				transform.position = hit.point + hit.normal * radius;
+				float visualPenetration = 0.03f; // tune between 0.01–0.08
+				transform.position = hit.point + hit.normal * (radius - visualPenetration);
 
 				// Reduce remaining distance
 				remainingDistance -= hit.distance;
