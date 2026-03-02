@@ -91,6 +91,40 @@ public class scrBall : MonoBehaviour
 
 		int safetyCounter = 0; // prevents infinite loops
 
+		Collider ballCollider = GetComponent<SphereCollider>();
+
+		Collider[] overlaps = Physics.OverlapSphere(transform.position, radius);
+
+		foreach (Collider col in overlaps)
+		{
+			if (col.CompareTag("Paddle") ||
+					col.CompareTag("Brick") ||
+					col.CompareTag("Wall"))
+			{
+				Vector3 directionToResolve;
+				float distanceToResolve;
+
+				if (Physics.ComputePenetration(
+						ballCollider, transform.position, transform.rotation,
+						col, col.transform.position, col.transform.rotation,
+						out directionToResolve, out distanceToResolve))
+				{
+					// Push fully out
+					transform.position += directionToResolve * distanceToResolve;
+
+					// Only reflect if we were moving INTO the surface
+					float intoSurface = Vector3.Dot(direction, -directionToResolve);
+
+					if (intoSurface > 0f)
+					{
+						direction = Vector3.Reflect(direction, directionToResolve).normalized;
+					}
+
+					break;
+				}
+			}
+		}
+
 		while (remainingDistance > 0f && safetyCounter < 5)
 		{
 			RaycastHit hit;
@@ -124,6 +158,7 @@ public class scrBall : MonoBehaviour
 
 		if (hitter.CompareTag("Paddle"))
 		{
+			Debug.Log("Paddle Hit");
 			paddleHitCount++;
 			UpdateSpeed(paddleHitCount);
 
@@ -143,9 +178,13 @@ public class scrBall : MonoBehaviour
 			float newZ = Mathf.Cos(angle);
 
 			direction = new Vector3(newX, 0f, newZ).normalized;
+
+
 		}
 		else if (hitter.CompareTag("Brick"))
 		{
+			Debug.Log("Brick Hit");
+
 			scrBrick brick = hitter.GetComponent<scrBrick>();
 			brick.durability -= 1;
 			brick.ChangeColor();
@@ -154,6 +193,8 @@ public class scrBall : MonoBehaviour
 		}
 		else if (hitter.CompareTag("Wall"))
 		{
+			Debug.Log("Wall Hit");
+
 			direction = Vector3.Reflect(direction, hit.normal).normalized;
 		}
 	}
