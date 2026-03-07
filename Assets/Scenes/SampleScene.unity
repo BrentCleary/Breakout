@@ -4393,7 +4393,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3520559399474772345, guid: 66a5fbae984647342bdea58feb50dfac, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -49
+      value: -260
       objectReference: {fileID: 0}
     - target: {fileID: 3520559399474772345, guid: 66a5fbae984647342bdea58feb50dfac, type: 3}
       propertyPath: m_LocalRotation.w
@@ -4425,7 +4425,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7995004813391338194, guid: 66a5fbae984647342bdea58feb50dfac, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1200
+      value: 120
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4523,7 +4523,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2520178123015881851, guid: 1f14c6942540b304f806cc24d557bc4c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -179
       objectReference: {fileID: 0}
     - target: {fileID: 2520178123015881851, guid: 1f14c6942540b304f806cc24d557bc4c, type: 3}
       propertyPath: m_LocalPosition.y
@@ -4531,7 +4531,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2520178123015881851, guid: 1f14c6942540b304f806cc24d557bc4c, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -347
+      value: -102
       objectReference: {fileID: 0}
     - target: {fileID: 2520178123015881851, guid: 1f14c6942540b304f806cc24d557bc4c, type: 3}
       propertyPath: m_LocalRotation.w
@@ -4560,6 +4560,14 @@ PrefabInstance:
     - target: {fileID: 2520178123015881851, guid: 1f14c6942540b304f806cc24d557bc4c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4064333866271764220, guid: 1f14c6942540b304f806cc24d557bc4c, type: 3}
+      propertyPath: ID
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4064333866271764220, guid: 1f14c6942540b304f806cc24d557bc4c, type: 3}
+      propertyPath: speedLevel
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6824590183787821751, guid: 1f14c6942540b304f806cc24d557bc4c, type: 3}
       propertyPath: m_Name
