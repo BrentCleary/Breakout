@@ -14,11 +14,12 @@ public class scrBall : MonoBehaviour
 	public int speedLevel = 0; // 0-4, corresponds to speedList index
 	public string ColDetMod;
 	private float speed_0 = 0f;
-	private float speed_1 = 800f;
-	private float speed_2 = 1200f;
-	private float speed_3 = 1600f;
-	private float speed_4 = 2000f;
+	private float speed_1 = 600f;
+	private float speed_2 = 800f;
+	private float speed_3 = 1000f;
+	private float speed_4 = 1200f;
 	List<float> speedList = new List<float>();
+	
 	public int paddleHitCount = 0;
 	public Vector3 direction;
 	public bool hasReflectedThisStep;
