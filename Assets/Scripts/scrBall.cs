@@ -4,6 +4,12 @@ using UnityEngine.InputSystem;
 
 public class scrBall : MonoBehaviour
 {
+
+	// GROK https://grok.com/c/bd04f5cf-7121-482e-8bfc-bdbcfd919700?rid=614cd0a1-b396-4ebf-9671-f59f1693ee59
+	// GPT  https://chatgpt.com/g/g-p-697c58815bd88191a93c756aa16a3d86-breakout/project
+
+
+
 	// ----- ----- ----- ----- ----- ----- CONFIG PARAMS ----- ----- ----- ----- ----- -----
 	public int ID;
 	private static int _nextID = 1; // Auto-incrementing ID for each ball instance
@@ -175,4 +181,18 @@ public class scrBall : MonoBehaviour
 		currentSpeed = speedList[level];
 		speedLevel = level;
 	}
+
+	// POWER UPS
+	/*
+		Ball Moves through bricks and eliminates them without bouncing
+		Ball sticks on Paddle and waits to be launched
+		Ball splits into 2 balls
+		Ball Becomes Larger
+		Ball Splits emits two orbitting balls that eliminate all bricks touched
+	  Ball Charges Bricks into small bombs that explode after 1 second (keep short for testing)
+	 
+	 
+	 
+	*/
+
 }
