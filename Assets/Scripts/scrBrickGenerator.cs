@@ -22,36 +22,195 @@ public class scrBlockGenerator : MonoBehaviour
 	public Transform brickArrTransform;
 
 	[Header("Brick Array Settings")] // ! Array Size Controls
-	public int	  arrColLen = 7;                                              // Array Dimensions - Column
-	public int	  arrRowLen = 7;                                                 // Array Dimensions - Row
+	public int arrColLen = 7;                                              // Array Dimensions - Column
+	public int arrRowLen = 7;                                                 // Array Dimensions - Row
+	
 	[SerializeField] public GameObject[,] brickArr;
 	private int	  arrBrickCount => arrColLen * arrRowLen;                         // arrColLen * arrRowLen
+
+	[Header("Brick Spawn Spacing")] // ! Brick Spawn Position Controls
+	// This needs to be edited to be dynamic based on the size of the prefab, or the prefab needs to be made to fit these parameters
 	private float spawnX = 100f;                                             // Space Between Nodes
 	private float spawnY = 10.5f;
 	private float spawnZ = 20f;
 
+	[Header("Board Spawn Offset")] // ! Board Spawn Position Controls
+	private int brickSpawnOffsetX = 0;
+	private int brickSpawnOffsetY = 0;
+	private int brickSpawnOffsetZ = 0;
+
+
 	public List<int> startBrickValMap;
 	public List<int> crntBrickValMap;
+
+
+	[Header("Select Brick Spawn Preset")]
+	public bool presetClassic = true;
+	public bool presetWaterfall = false;
+
+
+	[Header("Continuous Waterfall Spawning PARAMETERS")]
+	[SerializeField, Tooltip("Master switch - continuous spawning happens only when true and presetWaterfall is active")]
+	public bool isWaterfallSpawningActive = true;
+
+	[SerializeField, Tooltip("Time between spawn attempt cycles (seconds)")]
+	private float waterfallSpawnInterval = 1.2f;                        // PARAMETER
+
+	[SerializeField, Tooltip("Chance a spawn attempt actually succeeds (0-1)")]
+	private float waterfallSpawnSuccessChance = 0.75f;                  // PARAMETER
+
+	[SerializeField, Tooltip("World Z position where all waterfall bricks appear (fixed row)")]
+	private float waterfallFixedRowZPosition = 300f;                    // PARAMETER
+
+	[SerializeField, Tooltip("Y position (world space) where newly spawned bricks appear")]
+	private float waterfallSpawnStartY = 400f;                          // PARAMETER - top of waterfall
+
+	[SerializeField, Tooltip("If true, new bricks slowly move downward after spawn")]
+	private bool shouldBricksFallDownward = false;                      // PARAMETER - OPTIONAL FEATURE
+
+	[SerializeField, Tooltip("Downward speed if shouldBricksFallDownward = true (units/sec)")]
+	private float brickFallSpeed = 30f;                                 // PARAMETER
+
+	private float waterfallSpawnTimer = 0f;  // Tracks time until next spawn attempt
+
+
 
 
 	// * ---------------------------------------- EVENTS ----------------------------------------
 
 	private void Start()
 	{
+		ApplyPreset();
 		CreateBoard();
 	}
 
-
-	public void CreateBoard()  //? Called in GameManager                      // Instantiates Variables, Calls Methods Below
+	private void Update()
 	{
-		brickArrTransform = gameObject.transform;                                              // Set parent transform for bricks to this object
+		if (!presetWaterfall) return;
+		if (!isWaterfallSpawningActive) return;
+
+		waterfallSpawnTimer += Time.deltaTime;
+
+		if (waterfallSpawnTimer >= waterfallSpawnInterval)
+		{
+			waterfallSpawnTimer -= waterfallSpawnInterval;  // more accurate than =0
+
+			if (Random.value <= waterfallSpawnSuccessChance)
+			{
+				SpawnWaterfallBrickAtRandomColumn();
+			}
+		}
+	}
+
+	// PURPOSE: Spawns exactly one brick in a random column (waterfall style)
+	//          Follows similar steps to classic: instantiate → position → build array
+	private void SpawnWaterfallBrickAtRandomColumn()
+	{
+		int randomColumn = Random.Range(0, arrColLen);
+
+		// NEW: prevent spawning on occupied column (single row → one brick per column max)
+		int targetRow = 0;
+		if (brickArr[randomColumn, targetRow] != null)
+		{
+			Debug.Log($"Waterfall: column {randomColumn} already has a brick — spawn skipped");
+			return;
+		}
+
+		// Step 1: Instantiate (mimic InstantiateBricks style)
+		GameObject brick = Instantiate(brickPrefab, brickArrTransform);
+		int brickID = brickList.Count;
+		brick.name = $"cntBrick ({brickID})";
+		brickList.Add(brick);
+
+		scrBrick brickScr = brick.GetComponentInChildren<scrBrick>();
+		if (brickScr != null)
+		{
+			brickScr.brickID = brickID;
+			scrBrickList.Add(brickScr);
+		}
+		else
+		{
+			Debug.LogWarning("No scrBrick component found on new brick", brick);
+		}
+
+		// Step 2: Position (mimic SetBrickTransformPosition style — but single position)
+		Vector3 position = new Vector3(
+				spawnX * randomColumn + brickSpawnOffsetX,
+				waterfallSpawnStartY,
+				waterfallFixedRowZPosition   // all bricks in same Z row
+		);
+		brick.transform.position = position;
+		Debug.Log(brick.name + " waterfall position set to " + position);
+
+		// Step 3: Assign to array & set arrPos (mimic BuildBrickArray style)
+		brickArr[randomColumn, targetRow] = brick;
+
+		if (brickScr != null)
+		{
+			brickScr.arrPos[0] = randomColumn;
+			brickScr.arrPos[1] = targetRow;
+			brick.name += $" [{randomColumn},{targetRow}]";
+		}
+
+		Debug.Log($"Waterfall brick spawned at column {randomColumn}  pos {position}");
+	}
+
+
+
+	private void ApplyPreset()
+	{
+		if (presetClassic)	 { SetClassicParameters(); }
+		if (presetWaterfall) { SetWaterfallParameters(); }
+	}
+	public void SetClassicParameters()
+	{
+		arrColLen = 7;
+		arrRowLen = 7;
+
+		spawnX = 100f;
+		spawnY = 10.5f;
+		spawnZ = 20f;
+
+		brickSpawnOffsetX = -300;
+		brickSpawnOffsetY = 0;
+		brickSpawnOffsetZ = 300;
+	}
+
+	public void SetWaterfallParameters()
+	{
+		arrColLen = 7;
+		arrRowLen = 1;
+
+		spawnX = 100f;
+		spawnY = 200f;
+		spawnZ = 20f;
+
+		brickSpawnOffsetX = -300;
+		brickSpawnOffsetY = 300;
+		brickSpawnOffsetZ = 300;
+
+	}
+
+
+	public void CreateBoard() //? Called in GameManager // Instantiates Variables, Calls Methods Below
+	{
+		brickArrTransform = gameObject.transform; // Set parent transform for bricks to this object
 		brickArr = new GameObject[arrColLen, arrRowLen];
 
-		InstantiateBricks();
-		SetBrickTransformPosition();
-		BuildBrickArray();
+		brickList.Clear();
+		scrBrickList.Clear();
 
-		//AdjNodeMapper();
+		if (presetClassic)
+		{
+			InstantiateBricks();
+			SetBrickTransformPosition();
+			BuildBrickArray();
+		}
+		else if (presetWaterfall)
+		{
+			// Waterfall: start empty — bricks added continuously via SpawnWaterfallBrickAtRandomColumn()
+			Debug.Log("Waterfall preset active: board starts empty. Bricks will appear over time if isWaterfallSpawningActive = true.");
+		}
 	}
 
 
@@ -74,7 +233,12 @@ public class scrBlockGenerator : MonoBehaviour
 		int counter = 0;                                                              // Increments Node reference in brickList 
 		for (int i = 0; i < arrColLen; i++) {                                          // Assigns positions to each gNode in brickArr
 			for (int j = 0; j < arrRowLen; j++) {
-				brickList[counter].transform.position = new Vector3(spawnX * i - 300, spawnY, spawnZ * j + 300);
+				brickList[counter].transform.position = 
+					new Vector3	(	
+						spawnX * i + brickSpawnOffsetX, 
+						spawnY		 + brickSpawnOffsetY, 
+						spawnZ * j + brickSpawnOffsetZ 
+					);
 				Debug.Log(brickList[counter].name + " position set to " + brickList[counter].transform.position);
 				counter++;
 			}
@@ -116,6 +280,61 @@ public class scrBlockGenerator : MonoBehaviour
 			}
 		}
 	}
+
+
+	// PURPOSE: Waterfall version - only instantiates one brick at a time when called
+	//           (does NOT fill the whole grid)
+	public void WaterfallInstantiateBricks()
+	{
+		// We don't loop here anymore — this method is now called once per new brick
+		// Actual instantiation happens inside SpawnWaterfallBrick()
+		// This method exists mainly to keep the naming pattern consistent
+		Debug.Log("WaterfallInstantiateBricks called - waiting for continuous spawn requests");
+	}
+
+	// PURPOSE: Waterfall version - sets position for a newly spawned brick
+	//           Called immediately after instantiation in SpawnWaterfallBrick()
+	public void WaterfallSetBrickTransformPosition(GameObject newBrick, int columnIndex)
+	{
+		Vector3 position = new Vector3(
+				spawnX * columnIndex + brickSpawnOffsetX,
+				waterfallSpawnStartY,
+				waterfallFixedRowZPosition   // FIXED Z - single row waterfall
+		);
+
+		newBrick.transform.position = position;
+
+		Debug.Log(newBrick.name + " waterfall position set to " + position);
+	}
+
+	// PURPOSE: Waterfall version - assigns array position and updates lists for one brick
+	//           Called after position is set
+	public void WaterfallBuildBrickArray(GameObject newBrick, int columnIndex, int brickGlobalID)
+	{
+		int targetRowIndex = 0;  // always row 0 for single-row waterfall
+
+		if (brickArr[columnIndex, targetRowIndex] != null)
+		{
+			Debug.LogWarning($"Waterfall position [{columnIndex},{targetRowIndex}] already occupied - skipping array assignment");
+			return;
+		}
+
+		brickArr[columnIndex, targetRowIndex] = newBrick;
+
+		scrBrick brickScr = newBrick.GetComponentInChildren<scrBrick>();
+		if (brickScr != null)
+		{
+			brickScr.arrPos[0] = columnIndex;
+			brickScr.arrPos[1] = targetRowIndex;
+
+			// Improve name for debugging
+			newBrick.name += $" [{columnIndex},{targetRowIndex}]";
+		}
+
+		Debug.Log($"Waterfall brick added to brickArr at [{columnIndex},{targetRowIndex}]");
+	}
+
+
 
 	/*public void AdjNodeMapper()                                           // Loop over scrBrickList, assign adjNodes
 	{
