@@ -7,10 +7,10 @@ public class scrBrick : MonoBehaviour
 	private bool broken = false; // flag to prevent multiple breaks from multiple contacts;
 	public int	 brickID;
 
-	public GameObject cntBrickGenerator;
+	public GameObject cntBrick;
 	public int[] arrPos = new int[2];
 
-	public int durability = 3; // how many hits it takes to break this brick
+	public int durability = 0; // how many hits it takes to break this brick
 
 	Transform			 objBrick;
 	MeshRenderer[] meshRendList;
@@ -25,6 +25,8 @@ public class scrBrick : MonoBehaviour
 		}
 
 		meshRendList = GetComponentsInChildren<MeshRenderer>();
+
+		SetBrickParams();
 	}
 
 	private void Update()
@@ -32,15 +34,14 @@ public class scrBrick : MonoBehaviour
 		if (durability <= 0)
 		{
 			broken = true;
-			Destroy(gameObject);
+			Destroy(cntBrick);
 		}
-
 	}
 
 	public void Start()
 	{
 
-		cntBrickGenerator = transform.parent.gameObject;
+		cntBrick = transform.parent.gameObject;
 
 		//objBrick = gameObject.GetComponentInChildren<Transform>();
 		//meshRend = objBrick.GetComponentInChildren<MeshRenderer>();
@@ -72,6 +73,18 @@ public class scrBrick : MonoBehaviour
 					meshRend.material.color = Color.red;
 				}
 			}
+		}
+	}
+
+	public void SetBrickParams()
+	{
+		if (gameObject.CompareTag("Brick"))
+		{
+			durability = 2;
+		}
+		if (gameObject.CompareTag("GravityBrick"))
+		{
+			durability = 1;
 		}
 	}
 
