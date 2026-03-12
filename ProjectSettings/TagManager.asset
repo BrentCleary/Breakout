@@ -9,6 +9,7 @@ TagManager:
   - Paddle
   - Wall
   - PoolBall
+  - GravityBrick
   layers:
   - Default
   - TransparentFX

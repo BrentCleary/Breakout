@@ -87,6 +87,8 @@ public class scrBall : MonoBehaviour
 	// Purpose: Runs every physics step to update ball position, apply friction, and detect hits.
 	void FixedUpdate()
 	{
+		FirePowerUp();
+
 		bool isPoolBall = CompareTag("PoolBall");
 
 		// Apply friction only to pool balls before any movement.
@@ -138,6 +140,16 @@ public class scrBall : MonoBehaviour
 		position.y = radius;
 		transform.position = position;
 	}
+
+	public void FirePowerUp()
+	{
+		if (Input.GetKeyDown(KeyCode.Q))
+		{
+			MultiplyBall();
+		}
+	
+	}
+
 
 	// ResolvePenetrations method: Fixes any current overlaps with colliders.
 	// Purpose: Pushes the ball out of penetrating states and reflects if necessary.
@@ -318,4 +330,16 @@ public class scrBall : MonoBehaviour
 		paddleHitCount = 0;
 		speedLevel = 1;
 	}
+
+	public void MultiplyBall()
+	{
+		GameObject newBall = Instantiate(gameObject, transform.position, Quaternion.identity);
+		scrBall newBallScript = newBall.GetComponent<scrBall>();
+		newBallScript.direction = Quaternion.Euler(0f, 15f, 0f) * direction; // Slight angle for new ball.
+		newBallScript.currentSpeed = currentSpeed;
+
+	}
+
+
+
 }
